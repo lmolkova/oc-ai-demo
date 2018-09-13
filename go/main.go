@@ -69,5 +69,20 @@ func main() {
 			resp.Body.Close()
 		}
 	})
+	http.HandleFunc("/call_blank", func(w http.ResponseWriter, req *http.Request) {
+		fmt.Fprintf(w, "hello world")
+
+		r, _ := http.NewRequest("GET", "http://blank.org", nil)
+
+		// Propagate the trace header info in the outgoing requests.
+		r = r.WithContext(req.Context())
+		resp, err := client.Do(r)
+		if err != nil {
+			log.Println(err)
+		} else {
+			// TODO: handle response
+			resp.Body.Close()
+		}
+	})
 	log.Fatal(http.ListenAndServe(":50030", &ochttp.Handler{Propagation: &tracecontext.HTTPFormat{}}))
 }

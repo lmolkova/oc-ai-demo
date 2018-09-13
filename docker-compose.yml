@@ -27,7 +27,7 @@ services:
       - "8001:50030"
     links:
       - local-forwarder
-  ptyhon-app:
+  python-app:
     environment: 
       OCAGENT_TRACE_EXPORTER_ENDPOINT: local-forwarder:55678  
       SERVICE_NAME: python-app      
@@ -37,4 +37,14 @@ services:
     ports:
       - "8002:8000"
     links:
-      - local-forwarder      
+      - local-forwarder
+  aspnetcore-app:
+    environment:
+      APPINSIGHTS_INSTRUMENTATIONKEY: "${APPINSIGHTS_INSTRUMENTATIONKEY}"
+      WEBSITE_SITE_NAME: aspnetcore-app
+    build: 
+      context: ./aspnetcore
+    ports:
+      - "8003:80"
+    links:
+      - local-forwarder            

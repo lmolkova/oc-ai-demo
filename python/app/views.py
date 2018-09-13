@@ -43,15 +43,22 @@ def home(request):
     return render(request, 'home.html')
 
 
-# def call_dotnet_app(request):
-#    response = requests.get(
-#        "https://acmefrontend.azurewebsites.net/api/buywidget")
-#
-#    return HttpResponse(str(response.status_code))
+def call_dotnet_app(request):
+    data = [{"url": "http://blank.org", "arguments": []}]
+    response = requests.post(
+        "http://aspnetcore-app/api/forward", json=data)
+
+    return HttpResponse(str(response.status_code))
 
 
 def call_go_app(request):
     response = requests.get("http://go-app/")
+
+    return HttpResponse(str(response.status_code))
+
+
+def call_blank(request):
+    response = requests.get("http://blank.org/")
 
     return HttpResponse(str(response.status_code))
 
