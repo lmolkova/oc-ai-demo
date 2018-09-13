@@ -20,10 +20,7 @@ namespace W3CService
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<HttpClient>();
-            services.AddApplicationInsightsTelemetry(o => 
-            {
-                o.RequestCollectionOptions.EnableW3CDistributedTracing = true,
-            });
+            services.AddApplicationInsightsTelemetry(o => o.RequestCollectionOptions.EnableW3CDistributedTracing = true );
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
