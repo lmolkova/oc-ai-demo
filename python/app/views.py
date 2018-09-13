@@ -29,7 +29,7 @@ import os
 import requests
 
 
-INTEGRATIONS = ['httplib']
+INTEGRATIONS = ['httplib', 'requests']
 
 config_integration.trace_integrations(INTEGRATIONS, tracer=tracer_module.Tracer(
     exporter=trace_exporter.TraceExporter(
