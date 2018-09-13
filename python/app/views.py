@@ -52,7 +52,7 @@ def call_dotnet_app(request):
 
 
 def call_go_app(request):
-    response = requests.get("http://go-app/")
+    response = requests.get("http://go-app:50030/")
 
     return HttpResponse(str(response.status_code))
 
