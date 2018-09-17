@@ -40,7 +40,7 @@ func main() {
 
 	exporter, err := ocagent.NewExporter(ocagent.WithInsecure(), ocagent.WithServiceName(serviceName), ocagent.WithAddress(agentEndpoint))
 	if err != nil {
-		log.Printf("Failed to create the agent exporter: %v", err)
+		log.Fatalf("Failed to create the agent exporter: %v", err)
 	}
 
 	trace.RegisterExporter(exporter)
