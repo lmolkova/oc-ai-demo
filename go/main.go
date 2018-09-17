@@ -21,7 +21,7 @@ import (
 	"net/http"
 	os "os"
 
-	ocagent "contrib.go.opencensus.io/exporter/ocagent/v1"
+	ocagent "contrib.go.opencensus.io/exporter/ocagent"
 	"go.opencensus.io/plugin/ochttp"
 	"go.opencensus.io/plugin/ochttp/propagation/tracecontext"
 	"go.opencensus.io/trace"
@@ -33,13 +33,14 @@ func main() {
 	if len(serviceName) == 0 {
 		serviceName = "go-app"
 	}
-
-	agentHostName := os.Getenv("OCAGENT_TRACE_EXPORTER_ENDPOINT")
-	if len(agentHostName) == 0 {
-		agentHostName = "localhost"
+	fmt.Printf(serviceName)
+	agentEndpoint := os.Getenv("OCAGENT_TRACE_EXPORTER_ENDPOINT")
+	if len(agentEndpoint) == 0 {
+		agentEndpoint = fmt.Sprintf("%s:%d", ocagent.DefaultAgentHost, ocagent.DefaultAgentPort)
 	}
 
-	exporter, err := ocagent.NewExporter(ocagent.WithInsecure(), ocagent.WithServiceName(serviceName), ocagent.WithAddress(agentHostName))
+	fmt.Printf(agentEndpoint)
+	exporter, err := ocagent.NewExporter(ocagent.WithInsecure(), ocagent.WithServiceName(serviceName), ocagent.WithAddress(agentEndpoint))
 	if err != nil {
 		log.Printf("Failed to create the agent exporter: %v", err)
 	}

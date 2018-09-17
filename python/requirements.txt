@@ -5,6 +5,7 @@ google-cloud-trace==0.17.0
 grpcio==1.8.3
 mock==2.0.0
 mysql-connector==2.1.6
+opencensus=0.1.7
 psycopg2==2.7.3.1
 pymysql==0.7.11
 pyramid==1.9.1

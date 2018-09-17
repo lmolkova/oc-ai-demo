@@ -41,7 +41,7 @@ services:
   aspnetcore-app:
     environment:
       APPINSIGHTS_INSTRUMENTATIONKEY: "${APPINSIGHTS_INSTRUMENTATIONKEY}"
-      WEBSITE_SITE_NAME: aspnetcore-app
+      WEBSITE_HOSTNAME: aspnetcore-app
     build: 
       context: ./aspnetcore
     ports:
