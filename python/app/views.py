@@ -31,44 +31,16 @@ import requests
 
 INTEGRATIONS = ['httplib']
 
+service_name = os.getenv('SERVICE_NAME', 'python-service')
 config_integration.trace_integrations(INTEGRATIONS, tracer=tracer_module.Tracer(
     exporter=trace_exporter.TraceExporter(
-        service_name=os.getenv('SERVICE_NAME', 'python-service'),
+        service_name=service_name,
         endpoint=os.getenv('OCAGENT_TRACE_EXPORTER_ENDPOINT'),
         transport=BackgroundThreadTransport),
     propagator=TraceContextPropagator()))
 
 
-def home(request):
-    return render(request, 'home.html')
+def call(request):
+    requests.get("http://go-app:50030/call")
 
-
-def call_dotnet_app(request):
-    data = [{"url": "http://blank.org", "arguments": []}]
-    response = requests.post(
-        "http://aspnetcore-app/api/forward", json=data)
-
-    return HttpResponse(str(response.status_code))
-
-
-def call_go_app(request):
-    response = requests.get("http://go-app:50030/")
-
-    return HttpResponse(str(response.status_code))
-
-
-def call_blank(request):
-    response = requests.get("http://blank.org/")
-
-    return HttpResponse(str(response.status_code))
-
-
-def buy(request):
-    response = requests.get(
-        "https://acmefrontend.azurewebsites.net/api/buywidget")
-
-    return HttpResponse(str(response.status_code))
-
-
-def health_check(request):
-    return HttpResponse("ok", status=200)
+    return HttpResponse("hello world from " + service_name)

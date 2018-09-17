@@ -35,9 +35,5 @@ import app.views
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^$', app.views.home),
-    url(r'^buy', app.views.buy),
-    url(r'^call_go_app', app.views.call_go_app),
-    url(r'^call_dotnet_app', app.views.call_dotnet_app),
-    url(r'^call_blank', app.views.call_blank)
+    url(r'^call', app.views.call),
 ]

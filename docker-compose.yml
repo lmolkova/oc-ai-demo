@@ -6,38 +6,22 @@ services:
       APPINSIGHTS_INSTRUMENTATIONKEY: "${APPINSIGHTS_INSTRUMENTATIONKEY}"
     build: 
       context: ./lf
-    ports:
-      - "55678:55678"
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 3
-        window: 20s          
-    tty: true
-    stdin_open: true
   go-app:
     environment: 
       OCAGENT_TRACE_EXPORTER_ENDPOINT: local-forwarder:55678
       SERVICE_NAME: go-app
     build: 
       context: ./go
-      dockerfile: Dockerfile_app
     ports:
       - "8001:50030"
-    links:
-      - local-forwarder
   python-app:
     environment: 
       OCAGENT_TRACE_EXPORTER_ENDPOINT: local-forwarder:55678  
       SERVICE_NAME: python-app      
     build: 
       context: ./python
-      dockerfile: Dockerfile_app
     ports:
       - "8002:8000"
-    links:
-      - local-forwarder
   aspnetcore-app:
     environment:
       APPINSIGHTS_INSTRUMENTATIONKEY: "${APPINSIGHTS_INSTRUMENTATIONKEY}"
@@ -46,5 +30,3 @@ services:
       context: ./aspnetcore
     ports:
       - "8003:80"
-    links:
-      - local-forwarder            

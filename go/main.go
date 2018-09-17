@@ -28,18 +28,16 @@ import (
 )
 
 func main() {
-	// Register stats and trace exporters to export the collected data.
+	// Register trace exporters to export the collected data.
 	serviceName := os.Getenv("SERVICE_NAME")
 	if len(serviceName) == 0 {
 		serviceName = "go-app"
 	}
-	fmt.Printf(serviceName)
 	agentEndpoint := os.Getenv("OCAGENT_TRACE_EXPORTER_ENDPOINT")
 	if len(agentEndpoint) == 0 {
 		agentEndpoint = fmt.Sprintf("%s:%d", ocagent.DefaultAgentHost, ocagent.DefaultAgentPort)
 	}
 
-	fmt.Printf(agentEndpoint)
 	exporter, err := ocagent.NewExporter(ocagent.WithInsecure(), ocagent.WithServiceName(serviceName), ocagent.WithAddress(agentEndpoint))
 	if err != nil {
 		log.Printf("Failed to create the agent exporter: %v", err)
@@ -47,33 +45,16 @@ func main() {
 
 	trace.RegisterExporter(exporter)
 
-	// Always trace for this demo. In a production application, you should
-	// configure this to a trace.ProbabilitySampler set at the desired
-	// probability.
 	trace.ApplyConfig(trace.Config{DefaultSampler: trace.AlwaysSample()})
 
 	client := &http.Client{Transport: &ochttp.Transport{Propagation: &tracecontext.HTTPFormat{}}}
 
-	http.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
-		fmt.Fprintf(w, "hello world")
+	http.HandleFunc("/call", func(w http.ResponseWriter, req *http.Request) {
+		fmt.Fprintf(w, "hello world from %s", serviceName)
 
 		var jsonStr = []byte(`[ { "url": "http://blank.org", "arguments": [] } ]`)
-		r, _ := http.NewRequest("POST", "http://lmolkova-oc-test.azurewebsites.net/api/forward", bytes.NewBuffer(jsonStr))
+		r, _ := http.NewRequest("POST", "http://aspnetcore-app/api/forward", bytes.NewBuffer(jsonStr))
 		r.Header.Set("Content-Type", "application/json")
-		// Propagate the trace header info in the outgoing requests.
-		r = r.WithContext(req.Context())
-		resp, err := client.Do(r)
-		if err != nil {
-			log.Println(err)
-		} else {
-			// TODO: handle response
-			resp.Body.Close()
-		}
-	})
-	http.HandleFunc("/call_blank", func(w http.ResponseWriter, req *http.Request) {
-		fmt.Fprintf(w, "hello world")
-
-		r, _ := http.NewRequest("GET", "http://blank.org", nil)
 
 		// Propagate the trace header info in the outgoing requests.
 		r = r.WithContext(req.Context())
