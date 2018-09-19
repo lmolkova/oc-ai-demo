@@ -40,7 +40,7 @@ config_integration.trace_integrations(INTEGRATIONS, tracer=tracer_module.Tracer(
     propagator=TraceContextPropagator()))
 
 
-def call(request):
-    requests.get("http://go-app:50030/call")
+def call_go_app(request):
+    requests.get("http://go-app:50030/call_aspnetcore_app")
 
     return HttpResponse("hello world from " + service_name)

@@ -49,7 +49,7 @@ func main() {
 
 	client := &http.Client{Transport: &ochttp.Transport{Propagation: &tracecontext.HTTPFormat{}}}
 
-	http.HandleFunc("/call", func(w http.ResponseWriter, req *http.Request) {
+	http.HandleFunc("/call_aspnetcore_app", func(w http.ResponseWriter, req *http.Request) {
 		fmt.Fprintf(w, "hello world from %s", serviceName)
 
 		var jsonStr = []byte(`[ { "url": "http://blank.org", "arguments": [] } ]`)
